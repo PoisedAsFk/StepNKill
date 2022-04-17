@@ -1,7 +1,36 @@
 ﻿@page "/"
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject SmmoApiClient SmmoHttp
 
 <PageTitle>Index</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
-<MudText Class="mb-8">Welcome to your new app, powered by MudBlazor!</MudText>
-<MudAlert Severity="Severity.Normal">You can find documentation and examples on our website here: <MudLink Href="https://mudblazor.com" Typo="Typo.body2" Color="Color.Inherit"><b>www.mudblazor.com</b></MudLink></MudAlert>
+<MudStack>
+    <MudPaper Class="pa-4">
+        <MudStack Row="true">
+            <MudAvatar Image="images/mony.jpg" Size="Size.Large" />
+            <MudStack Justify="Justify.Center" Spacing="0">
+                <MudText Typo="Typo.body1">Monsy Larsson</MudText>
+                <MudText Typo="Typo.body2">onebiteonekill@mony.dog</MudText>
+            </MudStack>
+        </MudStack>
+    </MudPaper>
+
+    <MudPaper Class="pa-4">
+        <MudStack Spacing="4">
+            <MudStack Row="true">
+                <MudTextField @bind-Value="@_textBoxInputID" Label="ID" />
+                <MudTextField @bind-Value="@_textBoxApikey" Label="Api Key" />
+            </MudStack>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SetSmmoKeyLocalStorage" DisableElevation="true">Set Api Key</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiMeTask" DisableElevation="true">SendApiMeTask</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiPlayerTask" DisableElevation="true">SendApiPlayerTask</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiGuildWarTask" DisableElevation="true">SendApiGuildWarTask</MudButton>
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiGuildInfoTask" DisableElevation="true">SendApiGuildInfoTask</MudButton>
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiGuildMembersTask" DisableElevation="true">SendApiGuildMembersTask</MudButton>
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="DoCrazyStuffTask" DisableElevation="true">DoCrazyStuffTask</MudButton>
+        </MudStack>
+                <MudTextField @bind-Value="@_testJson" Label="Json" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="50"/>
+    </MudPaper>
+</MudStack>
+
+

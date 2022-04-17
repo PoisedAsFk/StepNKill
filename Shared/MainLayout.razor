@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -8,6 +8,14 @@
     <MudAppBar Elevation="0">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
+		@if (!_isDarkMode)
+        {
+            <MudIconButton Icon="@Icons.TwoTone.DarkMode" OnClick="@((e) => ToggleDark())" Color="Color.Inherit" Link="#"/>
+        }
+        else
+        {
+            <MudIconButton Icon="@Icons.TwoTone.LightMode" OnClick="@((e) => ToggleDark())" Color="Color.Inherit" Link="#"/>
+        }
         <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" />
     </MudAppBar>
@@ -26,7 +34,14 @@
 
 @code {
     bool _drawerOpen = true;
+    private bool _isDarkMode = true;
+    private MudThemeProvider? _mudThemeProvider;
 
+    public void ToggleDark()
+    {
+        _isDarkMode = !_isDarkMode;
+    }
+	
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
