@@ -71,7 +71,7 @@ namespace StepNKill.Smmo
 		{
 			if(string.IsNullOrWhiteSpace(guildId))
 			{
-				guildId = "828";
+				guildId = "293";
 			}
 
 			var response = await _http.PostAsync($"{SMMO.GuildWarEndpoint}/{guildId}/1", _apiKey);
@@ -87,7 +87,7 @@ namespace StepNKill.Smmo
 		{
 			if(string.IsNullOrWhiteSpace(guildId))
 			{
-				guildId = "828";
+				guildId = "293";
 			}
 
 			var response = await _http.PostAsync($"{SMMO.GuildInfoEndpoint}/{guildId}", _apiKey);
@@ -104,30 +104,10 @@ namespace StepNKill.Smmo
 		{
 			if(string.IsNullOrWhiteSpace(guildId))
 			{
-				guildId = "828";
+				guildId = "293";
 			}
 
 			var response = await _http.PostAsync($"{SMMO.GuildMembersEndpoint}/{guildId}", _apiKey);
-
-			var jsonResponseNode = JsonNode.Parse(await response.Content.ReadAsStreamAsync());
-
-			var rawJsonResponse = jsonResponseNode.ToJsonString(_serializerOptions);
-
-			return new SmmoApiClientResult { Success = true, SmmoApiGuildMembers = JsonSerializer.Deserialize<List<SmmoApiGuildMembers>>(rawJsonResponse, _serializerOptions), RawJson = rawJsonResponse };
-		}
-
-		public async Task<SmmoApiClientResult?> GetTest()
-		{
-
-			var request = new HttpRequestMessage();
-			request.RequestUri = new Uri("https://web.simple-mmo.com/login");
-			request.Method = HttpMethod.Get;
-
-			var response = await _http.SendAsync(request);
-			var result = await response.Content.ReadAsStringAsync();
-			Console.WriteLine(result);
-
-			Console.WriteLine(response);
 
 			var jsonResponseNode = JsonNode.Parse(await response.Content.ReadAsStreamAsync());
 
