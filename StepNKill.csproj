@@ -14,7 +14,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-		<PackageReference Include="MudBlazor" Version="6.0.10-dev.2" />
+		<PackageReference Include="MudBlazor" Version="6.0.10-dev.5" />
 	</ItemGroup>
 
 	<ItemGroup>
