@@ -5,7 +5,7 @@ namespace StepNKill.Pages
 {
 	public partial class Index
 	{
-		private string _textBoxApikey = "";
+		private string _textApiKey = "";
 		private string _textBoxInputID = "";
 		private string _testJson = "";
 
@@ -31,10 +31,8 @@ namespace StepNKill.Pages
 		{
 			if(!string.IsNullOrWhiteSpace(await localStorage.GetItemAsStringAsync("smmoApi")))
 			{
-				_apiKey = await localStorage.GetItemAsStringAsync("smmoApi");
-				await SmmoHttp.SetApiKey(_apiKey);
-				Console.WriteLine("api key in storage " + _apiKey);
-				_textBoxApikey = _apiKey;
+				_textApiKey = await localStorage.GetItemAsStringAsync("smmoApi");
+				await SmmoHttp.SetApiKey(_textApiKey);
 				await SendApiMeTask();
 			}
 			else
@@ -97,9 +95,8 @@ namespace StepNKill.Pages
 
 		private async Task SetSmmoKeyLocalStorage()
 		{
-			_apiKey = _textBoxApikey;
-			await localStorage.SetItemAsStringAsync("smmoApi", _apiKey);
-			await SmmoHttp.SetApiKey(_apiKey);
+			await localStorage.SetItemAsStringAsync("smmoApi", _textApiKey);
+			await SmmoHttp.SetApiKey(_textApiKey);
 		}
 
 

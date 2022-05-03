@@ -2,18 +2,16 @@
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json;
-using StepNKill.Services;
 
 namespace StepNKill.Smmo
 {
 	public class SmmoApiClient
 	{
 		private readonly HttpClient _http;
-		private readonly TestingService _testingService;
+		private readonly SmmoDataService _smmoDataService;
 
 		private FormUrlEncodedContent? _apiKey;
 
-		//inject Testingservices
 
 
 		public async Task SetApiKey(string key)
@@ -22,8 +20,6 @@ namespace StepNKill.Smmo
 			{
 				var SmmoApiKeyDict = new Dictionary<string, string>() { { "api_key", key } };
 				_apiKey = new FormUrlEncodedContent(SmmoApiKeyDict);
-				_testingService._apiKey = _apiKey;
-				Console.WriteLine(_testingService._apiKey.ToString());
 			}
 		}
 
@@ -34,10 +30,10 @@ namespace StepNKill.Smmo
 			NumberHandling = JsonNumberHandling.Strict
 		};
 
-		public SmmoApiClient(HttpClient http, TestingService testingService)
+		public SmmoApiClient(HttpClient http, SmmoDataService smmoDataService)
 		{
 			_http = http;
-			_testingService = testingService;
+			_smmoDataService = smmoDataService;
 		}
 
 		public async Task<SmmoApiClientResult?> GetMe()

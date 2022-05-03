@@ -3,10 +3,9 @@
 @using Smmo.Models
 @using Smmo.Models.Poised
 @using Smmo.Models.SmmoApi
-@using StepNKill.Services
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject SmmoApiClient SmmoHttp
-@inject TestingService _testingService
+@inject SmmoDataService _smmoDataService
 
 <PageTitle>Index</PageTitle>
 
@@ -15,7 +14,7 @@
         <MudStack Spacing="4">
             <MudStack Row="true">
                 <MudTextField @bind-Value="@_textBoxInputID" Label="ID" />
-                <MudTextField @bind-Value="@_textBoxApikey" Label="Api Key" />
+                <MudTextField @bind-Value="@_textApiKey" Label="Api Key" />
             </MudStack>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SetSmmoKeyLocalStorage" DisableElevation="true">Set Api Key</MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiMeTask" DisableElevation="true">SendApiMeTask</MudButton>
