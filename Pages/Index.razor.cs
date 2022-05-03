@@ -1,4 +1,6 @@
-﻿using StepNKill.Smmo.Models.Poised;
+﻿using System;
+using StepNKill.Smmo;
+using StepNKill.Smmo.Models.Poised;
 using StepNKill.Smmo.Models.SmmoApi;
 
 namespace StepNKill.Pages
@@ -7,20 +9,23 @@ namespace StepNKill.Pages
 	{
 		private string _textApiKey = "";
 		private string _textBoxInputID = "";
-		private string _testJson = "";
+		private string _textJson = "";
 
-		private string _apiKey = "";
 		private SmmoApiMe? _smmoApiMe;
-		private long _myGuildId;
+		private string? _myGuildId;
 
 		private SmmoApiPlayer? _currentPlayer;
 
 		private SmmoApiGuildInfo? _currentGuild;
+
 		private List<SmmoApiGuildWar> _currentGuildWars = new List<SmmoApiGuildWar>();
+
 		private List<SmmoApiGuildMembers> _currentGuildMembers = new List<SmmoApiGuildMembers>();
 
-		public List<SnKGuildWar> _snkGuildWars = new List<SnKGuildWar>();
 
+
+		public List<SnKGuildWar> _snkGuildWars = new List<SnKGuildWar>();
+		private HashSet<SnKGuildWar> _selectedWars = new HashSet<SnKGuildWar>();
 
 		private List<SmmoApiPlayer> _playerTargetList = new List<SmmoApiPlayer>();
 		private List<SmmoApiPlayer> _playerTargetListsortbyactive = new List<SmmoApiPlayer>();
@@ -33,63 +38,16 @@ namespace StepNKill.Pages
 			{
 				_textApiKey = await localStorage.GetItemAsStringAsync("smmoApi");
 				await SmmoHttp.SetApiKey(_textApiKey);
-				await SendApiMeTask();
-			}
-			else
-			{
-				Console.WriteLine("No keys in storage");
+				await LoadApiMe();
 			}
 		}
 
-		private async Task SendApiPlayerTask()
+		private async Task LoadApiMe()
 		{
-			SmmoApiClientResult response = await SmmoHttp.GetPlayer(_textBoxInputID);
-			_testJson = response.RawJson;
-			if(response.Success)
-			{
-				_currentPlayer = response.SmmoApiPlayer;
-			}
-		}
-
-		private async Task SendApiGuildWarTask()
-		{
-			SmmoApiClientResult response = await SmmoHttp.GetGuildWars(_textBoxInputID);
-			_testJson = response.RawJson;
-			_currentGuildWars = response.SmmoApiGuildWars;
-		}
-
-		private async Task SendApiMeTask()
-		{
-			SmmoApiClientResult response = await SmmoHttp.GetMe();
-			_testJson = response.RawJson;
-			if(response.Success)
-			{
-				await LoadApiMe(response.SmmoApiMe);
-			}
-		}
-
-		private async Task SendApiGuildInfoTask()
-		{
-			var id = _textBoxInputID;
-			SmmoApiClientResult response = await SmmoHttp.GetGuildInfo(_textBoxInputID);
-			_testJson = response.RawJson;
-			_currentGuild = response.SmmoApiGuildInfo;
-		}
-
-		private async Task SendApiGuildMembersTask()
-		{
-			var id = _textBoxInputID;
-			SmmoApiClientResult response = await SmmoHttp.GetGuildMembers(_textBoxInputID);
-			_testJson = response.RawJson;
-			_currentGuildMembers = response.SmmoApiGuildMembers;
-		}
-
-		private async Task LoadApiMe(SmmoApiMe apiMe)
-		{
-			_smmoApiMe = apiMe;
+			await SendApiMeTask();
 			if(_smmoApiMe.Guild.Id != -1)
 			{
-				_myGuildId = _smmoApiMe.Guild.Id;
+				_myGuildId = _smmoApiMe.Guild.Id.ToString();
 			}
 		}
 
@@ -99,9 +57,33 @@ namespace StepNKill.Pages
 			await SmmoHttp.SetApiKey(_textApiKey);
 		}
 
-
-		private async Task DoCrazyStuffTask()
+		private async Task GetMembersFromWarTask()
 		{
+			foreach(var guildWar in _selectedWars)
+			{
+				var enemyId = guildWar.EnemyGuildID;
+				var result = await SmmoHttp.GetGuildMembers(enemyId.ToString());
+				var enemyMembers = result.SmmoApiGuildMembers;
+				_textJson = result.RawJson;
+			}
+		}
+
+		private async Task SendApiPlayerTask()
+		{
+			SmmoApiClientResult response = await SmmoHttp.GetPlayer(_textBoxInputID);
+			_textJson = response.RawJson;
+			if(response.Success)
+			{
+				_currentPlayer = response.SmmoApiPlayer;
+			}
+		}
+
+		private async Task SendApiGuildWarTask()
+		{
+			SmmoApiClientResult response = await SmmoHttp.GetGuildWars(_textBoxInputID);
+			_textJson = response.RawJson;
+			_currentGuildWars = response.SmmoApiGuildWars;
+
 			foreach(var war in _currentGuildWars)
 			{
 				var newWar = new SnKGuildWar();
@@ -115,6 +97,7 @@ namespace StepNKill.Pages
 							newWar.EnemyGuildName = war.Guild2.Name;
 							newWar.EnemyKills = war.Guild2.Kills;
 							newWar.Status = war.Status;
+							newWar.KillDifference = war.Guild1.Kills - war.Guild2.Kills;
 							_snkGuildWars.Add(newWar);
 							break;
 						}
@@ -125,6 +108,7 @@ namespace StepNKill.Pages
 							newWar.EnemyGuildID = war.Guild1.Id;
 							newWar.EnemyGuildName = war.Guild1.Name;
 							newWar.EnemyKills = war.Guild1.Kills;
+							newWar.KillDifference = war.Guild2.Kills - war.Guild1.Kills;
 							_snkGuildWars.Add(newWar);
 							break;
 						}
@@ -134,5 +118,33 @@ namespace StepNKill.Pages
 			}
 
 		}
+
+		private async Task SendApiMeTask()
+		{
+			SmmoApiClientResult response = await SmmoHttp.GetMe();
+			_textJson = response.RawJson;
+			if(response.Success)
+			{
+				_smmoApiMe = response.SmmoApiMe;
+			}
+		}
+
+		private async Task SendApiGuildInfoTask()
+		{
+			var id = _textBoxInputID;
+			SmmoApiClientResult response = await SmmoHttp.GetGuildInfo(_textBoxInputID);
+			_textJson = response.RawJson;
+			_currentGuild = response.SmmoApiGuildInfo;
+		}
+
+		private async Task SendApiGuildMembersTask()
+		{
+			var id = _textBoxInputID;
+			SmmoApiClientResult response = await SmmoHttp.GetGuildMembers(_textBoxInputID);
+			_textJson = response.RawJson;
+			_currentGuildMembers = response.SmmoApiGuildMembers;
+		}
+
+
 	}
 }

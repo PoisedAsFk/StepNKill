@@ -9,41 +9,44 @@
 
 <PageTitle>Index</PageTitle>
 
-<MudStack>
-       <MudPaper Class="pa-4">
-        <MudStack Spacing="4">
-            <MudStack Row="true">
-                <MudTextField @bind-Value="@_textBoxInputID" Label="ID" />
-                <MudTextField @bind-Value="@_textApiKey" Label="Api Key" />
-            </MudStack>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SetSmmoKeyLocalStorage" DisableElevation="true">Set Api Key</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiMeTask" DisableElevation="true">SendApiMeTask</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiPlayerTask" DisableElevation="true">SendApiPlayerTask</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiGuildWarTask" DisableElevation="true">SendApiGuildWarTask</MudButton>
-			<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiGuildInfoTask" DisableElevation="true">SendApiGuildInfoTask</MudButton>
-			<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiGuildMembersTask" DisableElevation="true">SendApiGuildMembersTask</MudButton>
-			<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="DoCrazyStuffTask" DisableElevation="true">DoCrazyStuffTask</MudButton>
-        </MudStack>
 
-            <MudTable Items="@_snkGuildWars" Hover="true" SortLabel="Sort By">
-    <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<SnKGuildWar, object>(x=>x.EnemyGuildName)">Enemy Guild</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<SnKGuildWar, object>(x=>x.SnKKills)">SnK Kills</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<SnKGuildWar, object>(x=>x.EnemyKills)">Enemy Kills</MudTableSortLabel></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Enemy Guild">@context.EnemyGuildName</MudTd>
-        <MudTd DataLabel="SnK Kills">@context.SnKKills</MudTd>
-        <MudTd DataLabel="Enemy Kills">@context.EnemyKills</MudTd>
-    </RowTemplate>
-    <PagerContent>
-        <MudTablePager PageSizeOptions="new int[]{50, 100}" />
-    </PagerContent>
-</MudTable>
-		
-                <MudTextField @bind-Value="@_testJson" Label="Json" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="50"/>
-    </MudPaper>
-	
+
+<MudStack Spacing="4">
+	<MudStack Row="true">
+		<MudTextField @bind-Value="@_textApiKey" Label="Api Key" />
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SetSmmoKeyLocalStorage" DisableElevation="true">Set Api Key</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiMeTask" DisableElevation="true">SendApiMeTask</MudButton>
+	</MudStack>
+	<MudStack Row="true">
+		<MudTextField @bind-Value="@_textBoxInputID" Label="ID" />
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiPlayerTask" DisableElevation="true">SendApiPlayerTask</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiGuildWarTask" DisableElevation="true">SendApiGuildWarTask</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiGuildInfoTask" DisableElevation="true">SendApiGuildInfoTask</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SendApiGuildMembersTask" DisableElevation="true">SendApiGuildMembersTask</MudButton>
+		<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="GetMembersFromWarTask" DisableElevation="true">Get memers fromm selected war</MudButton>
+	</MudStack>GetMembersFromWarTask
 </MudStack>
+
+<MudTable Items="@_snkGuildWars" MultiSelection="true" @bind-SelectedItems="_selectedWars" Hover="true" SortLabel="Sort By">
+	<HeaderContent>
+		<MudTh><MudTableSortLabel SortBy="new Func<SnKGuildWar, object>(x=>x.EnemyGuildName)">Enemy Guild</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<SnKGuildWar, object>(x=>x.SnKKills)">SnK Kills</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<SnKGuildWar, object>(x=>x.KillDifference)">KillDifference</MudTableSortLabel></MudTh>
+		<MudTh><MudTableSortLabel SortBy="new Func<SnKGuildWar, object>(x=>x.EnemyKills)">Enemy Kills</MudTableSortLabel></MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="Enemy Guild">@context.EnemyGuildName</MudTd>
+		<MudTd DataLabel="SnK Kills">@context.SnKKills</MudTd>
+		<MudTd DataLabel="KillDifference">@context.KillDifference</MudTd>
+		<MudTd DataLabel="Enemy Kills">@context.EnemyKills</MudTd>
+	</RowTemplate>
+	<PagerContent>
+		<MudTablePager PageSizeOptions="new int[]{50, 100}" />
+	</PagerContent>
+</MudTable>
+<MudText Inline="true">@_selectedWars.Count items selected</MudText>
+<MudTextField @bind-Value="@_textJson" Label="Json" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="5"/>
+
+
 
 
