@@ -27,7 +27,7 @@
 	</MudStack>GetMembersFromWarTask
 </MudStack>
 
-<MudTable Items="@_snkGuildWars" MultiSelection="true" @bind-SelectedItems="_selectedWars" Hover="true" SortLabel="Sort By">
+<MudTable Items="@_snkGuildWars" MultiSelection="true" @bind-SelectedItems="_selectedWars" Hover="true" SortLabel="Sort By" RowsPerPage="50">
 	<HeaderContent>
 		<MudTh><MudTableSortLabel SortBy="new Func<SnKGuildWar, object>(x=>x.EnemyGuildName)">Enemy Guild</MudTableSortLabel></MudTh>
 		<MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<SnKGuildWar, object>(x=>x.SnKKills)">SnK Kills</MudTableSortLabel></MudTh>
@@ -41,7 +41,7 @@
 		<MudTd DataLabel="Enemy Kills">@context.EnemyKills</MudTd>
 	</RowTemplate>
 	<PagerContent>
-		<MudTablePager PageSizeOptions="new int[]{50, 100}" />
+		<MudTablePager PageSizeOptions="new int[]{10, 50, 100}" />
 	</PagerContent>
 </MudTable>
 <MudText Inline="true">@_selectedWars.Count items selected</MudText>
